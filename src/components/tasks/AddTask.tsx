@@ -36,19 +36,36 @@ import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { addTask } from "@/redux/features/task/taskSlice";
 import { ITask } from "@/types";
 import { selectUsers } from "@/redux/features/user/userSlice";
+import { useState } from "react";
+import { useCreateTaskMutation } from "@/redux/api/baseApi";
 
 export function AddTask() {
-	const users = useAppSelector(selectUsers);
-	const form = useForm<ITask>();
-	const dispatch = useAppDispatch();
+	// const dispatch = useAppDispatch();
+	// const users = useAppSelector(selectUsers);
 
-	const onSubmit: SubmitHandler<FieldValues> = (data) => {
-		console.log(data); // THIS DATA IS BASICALLY BEING PASSED ON taskSlice AS ACTION
-		dispatch(addTask(data as ITask)); // THIS IS THE ACTION
+	const [open, setOpen] = useState(false);
+	const form = useForm<ITask>();
+
+	const [createTask, { data, isLoading, isError }] = useCreateTaskMutation();
+
+	const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+		// console.log(data); // THIS DATA IS BASICALLY BEING PASSED ON taskSlice AS ACTION
+		// dispatch(addTask(data as ITask)); // THIS IS THE ACTION
+
+		// AFTER RTK-QUERY
+		const taskData = {
+			...data,
+			isCompleted: false,
+		};
+
+		const res = await createTask(taskData).unwrap();
+		console.log(res);
+		setOpen(false);
+		form.reset();
 	};
 
 	return (
-		<Dialog>
+		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
 				<Button>Add Task</Button>
 			</DialogTrigger>
@@ -130,11 +147,11 @@ export function AddTask() {
 											</SelectTrigger>
 										</FormControl>
 										<SelectContent>
-											{users.map((user) => (
+											{/* {users.map((user) => (
 												<SelectItem key={user.id} value={user.id}>
 													{user.name}
 												</SelectItem>
-											))}
+											))} */}
 										</SelectContent>
 									</Select>
 								</FormItem>

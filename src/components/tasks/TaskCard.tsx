@@ -16,10 +16,10 @@ type TProps = {
 };
 
 export default function TaskCard({ task }: TProps) {
-	const users = useAppSelector(selectUsers);
-	const assignedToUsers = users.find((user) =>
-		task.assignedTo?.includes(user.id)
-	);
+	// const users = useAppSelector(selectUsers);
+	// const assignedToUsers = users.find((user) =>
+	// 	task.assignedTo?.includes(user.id)
+	// );
 	const dispatch = useAppDispatch();
 
 	return (
@@ -52,7 +52,7 @@ export default function TaskCard({ task }: TProps) {
 					/>
 				</div>
 			</div>
-			<p>Assigned to - {assignedToUsers ? assignedToUsers.name : "No One"}</p>
+			{/* <p>Assigned to - {assignedToUsers ? assignedToUsers.name : "No One"}</p> */}
 			<p className="mt-5">{task.description}</p>
 		</div>
 	);
